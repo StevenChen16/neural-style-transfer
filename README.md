@@ -51,6 +51,8 @@ Python 3.7 (Anaconda安装的)
 5.运行训练脚本：
 
 ```python train.py```
+或者，可以跳过步骤四，直接运行训练脚本
+```python train.py```
 
 运行成功则会输出训练进度：
 
