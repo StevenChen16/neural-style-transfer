@@ -24,7 +24,7 @@ def parse_opt(known=False):
     parser.add_argument('--learning_rate', type=int, default=0.01, help='学习率')
     parser.add_argument('--content_loss_factor', type=int, default=1, help='内容loss总加权系数')
     parser.add_argument('--style_loss_factor', type=int, default=100, help='风格loss总加权系数')
-    parser.add_argument('--img_size', type=int, default=0, help='图片尺寸,0代表不设置使用默认尺寸(450*300),其他输入代表使用图片尺寸')
+    parser.add_argument('--img_size', type=int, default=0, help='图片尺寸,0代表不设置使用默认尺寸(450*300),输入1代表使用图片尺寸,其他输入代表使用自定义尺寸')
     parser.add_argument('--img_width', type=int, default=450, help='风格loss总加权系数')
     parser.add_argument('--img_height', type=int, default=300, help='风格loss总加权系数')
     opt = parser.parse_known_args()[0] if known else parser.parse_args()
