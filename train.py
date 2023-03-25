@@ -10,21 +10,69 @@ import tensorflow as tf
 from model import NeuralStyleTransferModel
 import settings
 import utils
+import cv2
+import argparse
+
+
+def parse_opt(known=False):
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--content_img_path', type=str, default='./images/1.jpg', help='原图路径')
+    parser.add_argument('--style_img_path', type=str, default='./images/style.jpg', help='风格图片路径')
+    parser.add_argument('--output_path', type=str, default='./output/1', help='生成图片保存路径')
+    parser.add_argument('--epochs', type=int, default=20, help='total training epochs')
+    parser.add_argument('--step_per_epoch', type=int, default=100, help='每个epoch训练次数')
+    parser.add_argument('--learning_rate', type=int, default=0.01, help='学习率')
+    parser.add_argument('--content_loss_factor', type=int, default=1, help='内容loss总加权系数')
+    parser.add_argument('--style_loss_factor', type=int, default=100, help='风格loss总加权系数')
+    parser.add_argument('--img_size', type=int, default=0, help='图片尺寸,0代表不设置使用默认尺寸(450*300),其他输入代表使用图片尺寸')
+    opt = parser.parse_known_args()[0] if known else parser.parse_args()
+    return opt
+
+opt = parse_opt()
+print(opt)
+CONTENT_LOSS_FACTOR = opt.content_loss_factor
+STYLE_LOSS_FACTOR = opt.style_loss_factor
+CONTENT_IMAGE_PATH = opt.content_img_path
+STYLE_IMAGE_PATH = opt.style_img_path
+OUTPUT_DIR = opt.output_path
+EPOCHS = opt.epochs
+LEARNING_RATE = opt.learning_rate
+STEPS_PER_EPOCH = opt.step_per_epoch
+# # 内容特征层及loss加权系数
+# CONTENT_LAYERS = {'block4_conv2': 0.5, 'block5_conv2': 0.5}
+# # 风格特征层及loss加权系数
+# STYLE_LAYERS = {'block1_conv1': 0.2, 'block2_conv1': 0.2, 'block3_conv1': 0.2, 'block4_conv1': 0.2,
+#                 'block5_conv1': 0.2}
+
+
+if opt.img_size==0:
+    IMG_WIDTH = 450
+    IMG_HEIGHT = 300
+else:
+    #读取图片
+    img = cv2.imread(CONTENT_IMAGE_PATH)
+    IMG_WIDTH = img.shape[1]
+    IMG_HEIGHT = img.shape[0]
+print("IMG_WEIGHT:",IMG_WIDTH)
+print("IMG_HEIGHT:",IMG_HEIGHT)
+
+
 
 # 创建模型
 model = NeuralStyleTransferModel()
 
 # 加载内容图片
-content_image = utils.load_images(settings.CONTENT_IMAGE_PATH)
+content_image = utils.load_images(CONTENT_IMAGE_PATH,IMG_WIDTH,IMG_HEIGHT)
 # 风格图片
-style_image = utils.load_images(settings.STYLE_IMAGE_PATH)
+style_image = utils.load_images(STYLE_IMAGE_PATH,IMG_WIDTH,IMG_HEIGHT)
 
 # 计算出目标内容图片的内容特征备用
 target_content_features = model([content_image, ])['content']
 # 计算目标风格图片的风格特征
 target_style_features = model([style_image, ])['style']
 
-M = settings.WIDTH * settings.HEIGHT
+# M = settings.WIDTH * settings.HEIGHT
+M = IMG_WIDTH * IMG_HEIGHT
 N = 3
 
 
@@ -100,15 +148,15 @@ def total_loss(noise_features):
     """
     content_loss = compute_content_loss(noise_features['content'])
     style_loss = compute_style_loss(noise_features['style'])
-    return content_loss * settings.CONTENT_LOSS_FACTOR + style_loss * settings.STYLE_LOSS_FACTOR
+    return content_loss * CONTENT_LOSS_FACTOR + style_loss * STYLE_LOSS_FACTOR
 
 
 # 使用Adma优化器
-optimizer = tf.keras.optimizers.Adam(settings.LEARNING_RATE)
+optimizer = tf.keras.optimizers.Adam(LEARNING_RATE)
 
 # 基于内容图片随机生成一张噪声图片
-noise_image = tf.Variable((content_image + np.random.uniform(-0.2, 0.2, (1, settings.HEIGHT, settings.WIDTH, 3))) / 2)
-
+# noise_image = tf.Variable((content_image + np.random.uniform(-0.2, 0.2, (1, settings.HEIGHT, settings.WIDTH, 3))) / 2)
+noise_image = tf.Variable((content_image + np.random.uniform(-0.2, 0.2, (1, IMG_HEIGHT, IMG_WIDTH, 3))) / 2)
 
 # 使用tf.function加速训练
 @tf.function
@@ -128,17 +176,18 @@ def train_one_step():
 
 
 # 创建保存生成图片的文件夹
-if not os.path.exists(settings.OUTPUT_DIR):
-    os.mkdir(settings.OUTPUT_DIR)
+if not os.path.exists(OUTPUT_DIR):
+    os.mkdir(OUTPUT_DIR)
 
-# 共训练settings.EPOCHS个epochs
-for epoch in range(settings.EPOCHS):
+# 共训练EPOCHS个epochs
+for epoch in range(EPOCHS):
     # 使用tqdm提示训练进度
-    with tqdm(total=settings.STEPS_PER_EPOCH, desc='Epoch {}/{}'.format(epoch + 1, settings.EPOCHS)) as pbar:
-        # 每个epoch训练settings.STEPS_PER_EPOCH次
-        for step in range(settings.STEPS_PER_EPOCH):
+    with tqdm(total=STEPS_PER_EPOCH, desc='Epoch {}/{}'.format(epoch + 1, EPOCHS)) as pbar:
+        # 每个epoch训练STEPS_PER_EPOCH次
+        for step in range(STEPS_PER_EPOCH):
             _loss = train_one_step()
             pbar.set_postfix({'loss': '%.4f' % float(_loss)})
             pbar.update(1)
         # 每个epoch保存一次图片
-        utils.save_image(noise_image, '{}/{}.jpg'.format(settings.OUTPUT_DIR, epoch + 1))
+        utils.save_image(noise_image, '{}/{}.jpg'.format(OUTPUT_DIR, epoch + 1))
+

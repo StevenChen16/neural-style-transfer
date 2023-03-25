@@ -1,4 +1,4 @@
-# neural style transfer
+# tf2-neural-style-transfer
 
 使用Tensorflow 2.0实现的图片风格迁移Demo。
 
@@ -6,41 +6,41 @@
 
 风格图片示例：
 
-![](./samples/style.jpg)
+![](./images/style.jpg)
 
 示例1：
 
 输入图片
 
-![](./samples/city.jpg)
+![](./images/1.jpg)
 
 输出图片
 
-![](./samples/city_gen.jpg)
+![](./output/1-2/20.jpg)
 
 示例2：
 
 输入图片
 
-![](./samples/dog.jpg)
+![](./images/2.jpg)
 
 输出图片
 
-![](./samples/dog_gen.jpg)
+![](./output/2-1/12.jpg)
 
 # 快速开始
 
 开发环境:
 
-Python 3.7 (Anaconda安装的)
+Python 3.7
 
 1.clone 项目：
 
-```git clone https://github.com/AaronJny/DeepLearningExamples.git```
+```git clone https://github.com/StevenChen16/neural-style-transfer.git```
 
 2.切换到子项目根目录：
 
-```cd DeepLearningExamples/tf2-neural-style-transfer```
+```cd neural-style-transfer```
 
 3.安装依赖环境：
 
@@ -50,8 +50,6 @@ Python 3.7 (Anaconda安装的)
 
 5.运行训练脚本：
 
-```python train.py```
-或者，可以跳过步骤四，直接运行训练脚本
 ```python train.py```
 
 运行成功则会输出训练进度：
@@ -82,3 +80,9 @@ Process finished with exit code 0
 ```
 
 训练完成后在输出目录（默认`./output`）下能看到生成的图片，默认每个epoch保存一次生成的图片。
+
+本项目源自：
+
+<https://blog.csdn.net/aaronjny/article/details/104879258> 
+
+https://github.com/AaronJny/DeepLearningExamples/tree/master/tf2-neural-style-transfer 

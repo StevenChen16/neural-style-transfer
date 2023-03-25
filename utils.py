@@ -18,7 +18,8 @@ def normalization(x):
     return (x - image_mean) / image_std
 
 
-def load_images(image_path, width=settings.WIDTH, height=settings.HEIGHT):
+# def load_images(image_path, width=settings.WIDTH, height=settings.HEIGHT):
+def load_images(image_path, width, height):   
     """
     加载并处理图片
     :param image_path:　图片路径
