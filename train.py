@@ -50,7 +50,7 @@ STEPS_PER_EPOCH = opt.step_per_epoch
 if opt.img_size==0:
     IMG_WIDTH = 450
     IMG_HEIGHT = 300
-elif opt.imgsize==1:
+elif opt.img_size==1:
     #读取图片
     img = cv2.imread(CONTENT_IMAGE_PATH)
     IMG_WIDTH = img.shape[1]
