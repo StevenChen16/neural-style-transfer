@@ -25,6 +25,8 @@ def parse_opt(known=False):
     parser.add_argument('--content_loss_factor', type=int, default=1, help='内容loss总加权系数')
     parser.add_argument('--style_loss_factor', type=int, default=100, help='风格loss总加权系数')
     parser.add_argument('--img_size', type=int, default=0, help='图片尺寸,0代表不设置使用默认尺寸(450*300),其他输入代表使用图片尺寸')
+    parser.add_argument('--img_width', type=int, default=450, help='风格loss总加权系数')
+    parser.add_argument('--img_height', type=int, default=300, help='风格loss总加权系数')
     opt = parser.parse_known_args()[0] if known else parser.parse_args()
     return opt
 
@@ -48,11 +50,14 @@ STEPS_PER_EPOCH = opt.step_per_epoch
 if opt.img_size==0:
     IMG_WIDTH = 450
     IMG_HEIGHT = 300
-else:
+elif opt.imgsize==1:
     #读取图片
     img = cv2.imread(CONTENT_IMAGE_PATH)
     IMG_WIDTH = img.shape[1]
     IMG_HEIGHT = img.shape[0]
+else:
+    IMG_WIDTH = opt.img_width
+    IMG_HEIGHT = opt.img_height
 print("IMG_WEIGHT:",IMG_WIDTH)
 print("IMG_HEIGHT:",IMG_HEIGHT)
 
