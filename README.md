@@ -52,6 +52,14 @@ Python 3.7
 
 ```python train.py```
 
+6.指定cpu/gpu：
+
+```python
+python train-2.py --device gpu:0
+```
+
+注：train-2.py 在 train.py 的版本上添加了硬件选择的功能
+
 运行成功则会输出训练进度：
 
 ```

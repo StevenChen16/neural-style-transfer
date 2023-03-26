@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
-# @File    : train.py
-# @Author  : AaronJny
-# @Time    : 2020/03/13
-# @Desc    :
+
 import os
 import numpy as np
 from tqdm import tqdm

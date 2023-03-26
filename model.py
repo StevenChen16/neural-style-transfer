@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
-# @File    : model.py
-# @Author  : AaronJny
-# @Time    : 2020/03/13
-# @Desc    :
+
 import typing
 import tensorflow as tf
 import settings
