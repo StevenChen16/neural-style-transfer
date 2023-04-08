@@ -9,7 +9,7 @@ import settings
 import utils
 import cv2
 import argparse
-import torch
+# import torch
 # from utils.torch_utils import (EarlyStopping, ModelEMA, de_parallel, select_device, smart_DDP, smart_optimizer,smart_resume, torch_distributed_zero_first)
 
 
