@@ -45,8 +45,12 @@ STEPS_PER_EPOCH = opt.step_per_epoch
 # STYLE_LAYERS = {'block1_conv1': 0.2, 'block2_conv1': 0.2, 'block3_conv1': 0.2, 'block4_conv1': 0.2,
 #                 'block5_conv1': 0.2}
 
-
-torch.cuda.set_device(opt.device)
+use_cuda = True
+os.environ['CUDA_VISIBLE_DEVICES'] = '0,1'
+# device = torch.device('cuda' if torch.cuda.is_available() and use_cuda else 'cpu')
+# print(device)
+# torch.cuda.set_device(opt.device)
+# torch.cuda.set_device(device)
 
 if opt.img_size==0:
     IMG_WIDTH = 450
