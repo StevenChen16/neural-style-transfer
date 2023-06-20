@@ -5,7 +5,7 @@ import numpy as np
 from tqdm import tqdm
 import tensorflow as tf
 from model import NeuralStyleTransferModel
-import settings
+# import settings
 import utils
 import cv2
 import argparse
@@ -22,8 +22,8 @@ def parse_opt(known=False):
     parser.add_argument('--content_loss_factor', type=int, default=1, help='内容loss总加权系数')
     parser.add_argument('--style_loss_factor', type=int, default=100, help='风格loss总加权系数')
     parser.add_argument('--img_size', type=int, default=0, help='图片尺寸,0代表不设置使用默认尺寸(450*300),输入1代表使用图片尺寸,其他输入代表使用自定义尺寸')
-    parser.add_argument('--img_width', type=int, default=450, help='风格loss总加权系数')
-    parser.add_argument('--img_height', type=int, default=300, help='风格loss总加权系数')
+    parser.add_argument('--img_width', type=int, default=450, help='自定义图片宽度')
+    parser.add_argument('--img_height', type=int, default=300, help='自定义图片高度')
     opt = parser.parse_known_args()[0] if known else parser.parse_args()
     return opt
 
@@ -177,19 +177,23 @@ def train_one_step():
     return loss
 
 
-# 创建保存生成图片的文件夹
-if not os.path.exists(OUTPUT_DIR):
-    os.mkdir(OUTPUT_DIR)
+def main():
+    # 创建保存生成图片的文件夹
+    if not os.path.exists(OUTPUT_DIR):
+        os.mkdir(OUTPUT_DIR)
 
-# 共训练EPOCHS个epochs
-for epoch in range(EPOCHS):
-    # 使用tqdm提示训练进度
-    with tqdm(total=STEPS_PER_EPOCH, desc='Epoch {}/{}'.format(epoch + 1, EPOCHS)) as pbar:
-        # 每个epoch训练STEPS_PER_EPOCH次
-        for step in range(STEPS_PER_EPOCH):
-            _loss = train_one_step()
-            pbar.set_postfix({'loss': '%.4f' % float(_loss)})
-            pbar.update(1)
-        # 每个epoch保存一次图片
-        utils.save_image(noise_image, '{}/{}.jpg'.format(OUTPUT_DIR, epoch + 1))
-
+    # 共训练EPOCHS个epochs
+    for epoch in range(EPOCHS):
+        # 使用tqdm提示训练进度
+        with tqdm(total=STEPS_PER_EPOCH, desc='Epoch {}/{}'.format(epoch + 1, EPOCHS)) as pbar:
+            # 每个epoch训练STEPS_PER_EPOCH次
+            for step in range(STEPS_PER_EPOCH):
+                _loss = train_one_step()
+                pbar.set_postfix({'loss': '%.4f' % float(_loss)})
+                pbar.update(1)
+            # 每个epoch保存一次图片
+            print("{}\n{}\n{}".format(OUTPUT_DIR, CONTENT_IMAGE_PATH.split('.')[-2].split('/')[-1], epoch + 1))
+            utils.save_image(noise_image, '{}_{}epoch.jpg'.format(CONTENT_IMAGE_PATH.split('.')[-2].split('/')[-1], epoch + 1))
+            
+if __name__ == '__main__':
+    main()

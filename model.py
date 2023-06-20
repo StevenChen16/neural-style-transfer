@@ -2,7 +2,7 @@
 
 import typing
 import tensorflow as tf
-import settings
+# import settings
 
 
 def get_vgg19_model(layers):
@@ -21,10 +21,17 @@ def get_vgg19_model(layers):
     return model
 
 
+# 内容特征层及loss加权系数
+CONTENT_LAYERS = {'block4_conv2': 0.5, 'block5_conv2': 0.5}
+# 风格特征层及loss加权系数
+STYLE_LAYERS = {'block1_conv1': 0.2, 'block2_conv1': 0.2, 'block3_conv1': 0.2, 'block4_conv1': 0.2,
+                'block5_conv1': 0.2}
+
+
 class NeuralStyleTransferModel(tf.keras.Model):
 
-    def __init__(self, content_layers: typing.Dict[str, float] = settings.CONTENT_LAYERS,
-                 style_layers: typing.Dict[str, float] = settings.STYLE_LAYERS):
+    def __init__(self, content_layers: typing.Dict[str, float] = CONTENT_LAYERS,
+                 style_layers: typing.Dict[str, float] = STYLE_LAYERS):
         super(NeuralStyleTransferModel, self).__init__()
         # 内容特征层字典 Dict[层名,加权系数]
         self.content_layers = content_layers
