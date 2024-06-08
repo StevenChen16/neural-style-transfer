@@ -2,7 +2,6 @@
 
 import typing
 import tensorflow as tf
-# import settings
 
 
 def get_vgg19_model(layers):
@@ -11,27 +10,39 @@ def get_vgg19_model(layers):
     :return:
     """
     # 加载imagenet上预训练的vgg19
-    vgg = tf.keras.applications.VGG19(include_top=False, weights='imagenet')
+    vgg = tf.keras.applications.VGG19(include_top=False, weights="imagenet")
     # 提取需要被用到的vgg的层的output
     outputs = [vgg.get_layer(layer).output for layer in layers]
     # 使用outputs创建新的模型
-    model = tf.keras.Model([vgg.input, ], outputs)
+    model = tf.keras.Model(
+        [
+            vgg.input,
+        ],
+        outputs,
+    )
     # 锁死参数，不进行训练
     model.trainable = False
     return model
 
 
 # 内容特征层及loss加权系数
-CONTENT_LAYERS = {'block4_conv2': 0.5, 'block5_conv2': 0.5}
+CONTENT_LAYERS = {"block4_conv2": 0.5, "block5_conv2": 0.5}
 # 风格特征层及loss加权系数
-STYLE_LAYERS = {'block1_conv1': 0.2, 'block2_conv1': 0.2, 'block3_conv1': 0.2, 'block4_conv1': 0.2,
-                'block5_conv1': 0.2}
+STYLE_LAYERS = {
+    "block1_conv1": 0.2,
+    "block2_conv1": 0.2,
+    "block3_conv1": 0.2,
+    "block4_conv1": 0.2,
+    "block5_conv1": 0.2,
+}
 
 
 class NeuralStyleTransferModel(tf.keras.Model):
-
-    def __init__(self, content_layers: typing.Dict[str, float] = CONTENT_LAYERS,
-                 style_layers: typing.Dict[str, float] = STYLE_LAYERS):
+    def __init__(
+        self,
+        content_layers: typing.Dict[str, float] = CONTENT_LAYERS,
+        style_layers: typing.Dict[str, float] = STYLE_LAYERS,
+    ):
         super(NeuralStyleTransferModel, self).__init__()
         # 内容特征层字典 Dict[层名,加权系数]
         self.content_layers = content_layers
@@ -59,4 +70,4 @@ class NeuralStyleTransferModel(tf.keras.Model):
         for layer, factor in self.style_layers.items():
             style_outputs.append((outputs[self.outputs_index_map[layer]][0], factor))
         # 以字典的形式返回输出
-        return {'content': content_outputs, 'style': style_outputs}
+        return {"content": content_outputs, "style": style_outputs}

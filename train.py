@@ -5,7 +5,6 @@ import numpy as np
 from tqdm import tqdm
 import tensorflow as tf
 from model import NeuralStyleTransferModel
-# import settings
 import utils
 import cv2
 import argparse

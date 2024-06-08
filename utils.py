@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import tensorflow as tf
-# import settings
 
 # 我们准备使用经典网络在imagenet数据集上的与训练权重，所以归一化时也要使用imagenet的平均值和标准差
 image_mean = tf.constant([0.485, 0.456, 0.406])
@@ -16,7 +15,7 @@ def normalization(x):
 
 
 # def load_images(image_path, width=settings.WIDTH, height=settings.HEIGHT):
-def load_images(image_path, width, height):   
+def load_images(image_path, width, height):
     """
     加载并处理图片
     :param image_path:　图片路径
@@ -30,7 +29,7 @@ def load_images(image_path, width, height):
     x = tf.image.decode_jpeg(x, channels=3)
     # 修改图片大小
     x = tf.image.resize(x, [height, width])
-    x = x / 255.
+    x = x / 255.0
     # 归一化
     x = normalization(x)
     x = tf.reshape(x, [1, height, width, 3])
@@ -41,7 +40,7 @@ def load_images(image_path, width, height):
 def save_image(image, filename):
     x = tf.reshape(image, image.shape[1:])
     x = x * image_std + image_mean
-    x = x * 255.
+    x = x * 255.0
     x = tf.cast(x, tf.int32)
     x = tf.clip_by_value(x, 0, 255)
     x = tf.cast(x, tf.uint8)
