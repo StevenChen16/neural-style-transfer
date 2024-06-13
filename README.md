@@ -1,6 +1,6 @@
 # tf2-neural-style-transfer
 
-使用Tensorflow 2.0实现的图片风格迁移Demo。
+使用Tensorflow 2.0实现的图片风格迁移[Demo](https://huggingface.co/spaces/StevenChen16/Neural-Style-Transfer)。
 
 给定一张内容图片和一张风格图片，生成一张具备内容图片内容+风格图片风格的图片。
 
